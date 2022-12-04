@@ -1,0 +1,29 @@
+.login-container {
+    min-height: 100vh;
+    background-color: #f0f2f5;
+    .login-introduce {
+        .brand {
+            font-size: 4rem;
+            font-weight: 600;
+        }
+        .description {
+            font-size: 1.5rem;
+        }
+    }
+    .login-form {
+        border-radius: 6px;
+        background-color: white;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
+        .line {
+            height: 1px;
+            background: #ddd;
+        }
+        .forgot-password {
+            font-size: 1.5rem;
+            text-decoration: none;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
