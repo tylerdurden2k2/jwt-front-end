@@ -1,6 +1,12 @@
 import "./Login.scss";
+import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const Login = (props) => {
+    const history = useHistory();
+    const handleToRegisterPage = () => {
+        history.push("/register");
+    };
     return (
         <div className="login-container container-fluid pt-md-5 px-md-5">
             <div className="row px-md-5">
@@ -16,7 +22,7 @@ const Login = (props) => {
                 <div className="login-form container py-5 px-3 col-md-5">
                     <div className="row">
                         <div className="col-md-12 d-md-none text-center fs-1 fw-bold text-primary">
-                            react js
+                            Register
                         </div>
                         <div className="col-12 my-2">
                             <input
@@ -38,13 +44,16 @@ const Login = (props) => {
                             </button>
                         </div>
                         <div className="col-12 text-center my-3">
-                            <a className="forgot-password" href="/">
+                            <Link className="forgot-password" exact to="/">
                                 Forgot you password
-                            </a>
+                            </Link>
                         </div>
                         <div className="line col-12 mb-2" />
                         <div className="col-12 my-2 text-center">
-                            <button className="btn btn-lg btn-success">
+                            <button
+                                className="btn btn-lg btn-success"
+                                onClick={() => handleToRegisterPage()}
+                            >
                                 Create your account
                             </button>
                         </div>
