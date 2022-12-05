@@ -2,6 +2,7 @@ import "./Register.scss";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const Register = (props) => {
     const history = useHistory();
@@ -11,38 +12,63 @@ const Register = (props) => {
     const [password, setPassword] = useState("");
     const [rePassword, setRePassword] = useState("");
 
+    const defaultObj = {
+        isEmail: true,
+        isPassword: true,
+        isUsername: true,
+        isPhone: true,
+        isConfirmPassword: true,
+    };
+
+    const [checkObj, setCheckObj] = useState(defaultObj);
+
     const handleValidateForm = () => {
         const regex = /^\S+@\S+\.\S+$/;
         if (!email) {
             toast.error("You need to input email");
-            return false;
-        }
-        if (!phone) {
-            toast.error("You need to input email");
-            return false;
-        }
-        if (!username) {
-            toast.error("You need to input username");
-            return false;
-        }
-        if (!password) {
-            toast.error("You need to input password");
-            return false;
-        }
-        if (password !== rePassword) {
-            toast.error("You re-password error");
+            setCheckObj({ ...defaultObj, isEmail: false });
             return false;
         }
         if (!regex.test(email)) {
             toast.error("Your email invalid");
+            setCheckObj({ ...defaultObj, isEmail: false });
             return false;
         }
+        if (!phone) {
+            toast.error("You need to input phone");
+            setCheckObj({ ...defaultObj, isPhone: false });
+            return false;
+        }
+        if (!username) {
+            toast.error("You need to input username");
+            setCheckObj({ ...defaultObj, isUsername: false });
+            return false;
+        }
+        if (!password) {
+            toast.error("You need to input password");
+            setCheckObj({ ...defaultObj, isPassword: false });
+            return false;
+        }
+        if (password !== rePassword) {
+            toast.error("You re-password error");
+            setCheckObj({ ...defaultObj, isConfirmPassword: false });
+            return false;
+        }
+
         toast.success("Success!");
         return true;
     };
 
     const handleConfirm = () => {
-        handleValidateForm();
+        const check = handleValidateForm();
+        if (check) {
+            axios.post("http://localhost:8080/api/v1/register-user", {
+                email,
+                phone,
+                username,
+                password,
+            });
+        }
     };
     const handleToLoginPage = () => {
         history.push("/login");
@@ -69,7 +95,11 @@ const Register = (props) => {
                                 <label className="fs-6">Your email</label>
                                 <input
                                     type="email"
-                                    className="form-control "
+                                    className={
+                                        checkObj.isEmail
+                                            ? "form-control"
+                                            : "form-control is-invalid"
+                                    }
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
@@ -80,7 +110,11 @@ const Register = (props) => {
                                 <label className="fs-6">Phone</label>
                                 <input
                                     type="text"
-                                    className="form-control "
+                                    className={
+                                        checkObj.isPhone
+                                            ? "form-control"
+                                            : "form-control is-invalid"
+                                    }
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
                                 />
@@ -91,7 +125,11 @@ const Register = (props) => {
                                 <label className="fs-6">User name</label>
                                 <input
                                     type="text"
-                                    className="form-control "
+                                    className={
+                                        checkObj.isUsername
+                                            ? "form-control"
+                                            : "form-control is-invalid"
+                                    }
                                     value={username}
                                     onChange={(e) =>
                                         setUsername(e.target.value)
@@ -104,7 +142,11 @@ const Register = (props) => {
                                 <label className="fs-6">Password</label>
                                 <input
                                     type="password"
-                                    className="form-control "
+                                    className={
+                                        checkObj.isPassword
+                                            ? "form-control"
+                                            : "form-control is-invalid"
+                                    }
                                     value={password}
                                     onChange={(e) =>
                                         setPassword(e.target.value)
@@ -119,7 +161,11 @@ const Register = (props) => {
                                 </label>
                                 <input
                                     type="password"
-                                    className="form-control "
+                                    className={
+                                        checkObj.isConfirmPassword
+                                            ? "form-control"
+                                            : "form-control is-invalid"
+                                    }
                                     value={rePassword}
                                     onChange={(e) =>
                                         setRePassword(e.target.value)
