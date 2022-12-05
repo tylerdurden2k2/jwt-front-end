@@ -2,7 +2,7 @@ import "./Register.scss";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import axios from "axios";
+import { registerNewUser } from "../../services/userService";
 
 const Register = (props) => {
     const history = useHistory();
@@ -54,20 +54,24 @@ const Register = (props) => {
             setCheckObj({ ...defaultObj, isConfirmPassword: false });
             return false;
         }
-
-        toast.success("Success!");
         return true;
     };
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         const check = handleValidateForm();
         if (check) {
-            axios.post("http://localhost:8080/api/v1/register-user", {
+            let response = await registerNewUser({
                 email,
                 phone,
                 username,
                 password,
             });
+            if (response.data.EC === 0) {
+                toast.success(response.data.EM);
+                history.push("/login");
+            } else {
+                toast.error(response.data.EM);
+            }
         }
     };
     const handleToLoginPage = () => {
