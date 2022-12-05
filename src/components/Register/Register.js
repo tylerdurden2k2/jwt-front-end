@@ -1,8 +1,49 @@
 import "./Register.scss";
 import { useHistory } from "react-router-dom";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 const Register = (props) => {
     const history = useHistory();
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [rePassword, setRePassword] = useState("");
+
+    const handleValidateForm = () => {
+        const regex = /^\S+@\S+\.\S+$/;
+        if (!email) {
+            toast.error("You need to input email");
+            return false;
+        }
+        if (!phone) {
+            toast.error("You need to input email");
+            return false;
+        }
+        if (!username) {
+            toast.error("You need to input username");
+            return false;
+        }
+        if (!password) {
+            toast.error("You need to input password");
+            return false;
+        }
+        if (password !== rePassword) {
+            toast.error("You re-password error");
+            return false;
+        }
+        if (!regex.test(email)) {
+            toast.error("Your email invalid");
+            return false;
+        }
+        toast.success("Success!");
+        return true;
+    };
+
+    const handleConfirm = () => {
+        handleValidateForm();
+    };
     const handleToLoginPage = () => {
         history.push("/login");
     };
@@ -29,7 +70,8 @@ const Register = (props) => {
                                 <input
                                     type="email"
                                     className="form-control "
-                                    placeholder="Enter your user name..."
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -39,7 +81,8 @@ const Register = (props) => {
                                 <input
                                     type="text"
                                     className="form-control "
-                                    placeholder="Enter your user name..."
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -49,7 +92,10 @@ const Register = (props) => {
                                 <input
                                     type="text"
                                     className="form-control "
-                                    placeholder="Enter your user name..."
+                                    value={username}
+                                    onChange={(e) =>
+                                        setUsername(e.target.value)
+                                    }
                                 />
                             </div>
                         </div>
@@ -59,12 +105,33 @@ const Register = (props) => {
                                 <input
                                     type="password"
                                     className="form-control "
-                                    placeholder="Enter your user name..."
+                                    value={password}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
+                                />
+                            </div>
+                        </div>
+                        <div className="col-12 my-1">
+                            <div className="form-group">
+                                <label className="fs-6">
+                                    Re-enter password
+                                </label>
+                                <input
+                                    type="password"
+                                    className="form-control "
+                                    value={rePassword}
+                                    onChange={(e) =>
+                                        setRePassword(e.target.value)
+                                    }
                                 />
                             </div>
                         </div>
                         <div className="col-12 my-2">
-                            <button className="btn btn-primary w-100 btn-lg">
+                            <button
+                                className="btn btn-primary w-100 btn-lg"
+                                onClick={() => handleConfirm()}
+                            >
                                 Done
                             </button>
                         </div>
