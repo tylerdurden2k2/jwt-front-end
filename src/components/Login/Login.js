@@ -31,7 +31,17 @@ const Login = (props) => {
             return;
         }
         let response = await userLogin({ keyLogin, password });
-        console.log("check response: ", response);
+        if (response && response.data && response.data.EC === 0) {
+            toast.success(response.data.EM);
+            let sessionValue = {
+                isAuthenticate: true,
+                token: "fake token",
+            };
+            sessionStorage.setItem("account", JSON.stringify(sessionValue));
+            history.push("/users");
+        } else {
+            toast.error(response.data.EM);
+        }
     };
 
     const handleToRegisterPage = () => {
