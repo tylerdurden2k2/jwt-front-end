@@ -1,9 +1,39 @@
 import "./Login.scss";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { userLogin } from "../../services/userService";
 
 const Login = (props) => {
     const history = useHistory();
+    const [keyLogin, setKeyLogin] = useState("");
+    const [password, setPassword] = useState("");
+
+    const defaultObj = {
+        keyLogin: true,
+        password: true,
+    };
+
+    const [validField, setValidField] = useState(defaultObj);
+
+    const handleLogin = async () => {
+        setValidField(defaultObj);
+        //valid form
+        if (!keyLogin) {
+            toast.error("Please enter your email or your phone!");
+            setValidField({ ...defaultObj, keyLogin: false });
+            return;
+        }
+        if (!password) {
+            toast.error("Please enter your password!");
+            setValidField({ ...defaultObj, password: false });
+            return;
+        }
+        let response = await userLogin({ keyLogin, password });
+        console.log("check response: ", response);
+    };
+
     const handleToRegisterPage = () => {
         history.push("/register");
     };
@@ -27,19 +57,34 @@ const Login = (props) => {
                         <div className="col-12 my-2">
                             <input
                                 type="text"
-                                className="form-control form-control-lg"
-                                placeholder="Enter your user name..."
+                                className={
+                                    validField.keyLogin
+                                        ? "form-control form-control-lg"
+                                        : "form-control is-invalid form-control-lg"
+                                }
+                                placeholder="Enter your email or your phone..."
+                                value={keyLogin}
+                                onChange={(e) => setKeyLogin(e.target.value)}
                             />
                         </div>
                         <div className="col-12 my-2">
                             <input
                                 type="password"
-                                className="form-control form-control-lg"
+                                className={
+                                    validField.password
+                                        ? "form-control form-control-lg"
+                                        : "form-control is-invalid form-control-lg"
+                                }
                                 placeholder="Enter your password..."
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
                         <div className="col-12 my-2">
-                            <button className="btn btn-primary w-100 btn-lg">
+                            <button
+                                className="btn btn-primary w-100 btn-lg"
+                                onClick={() => handleLogin()}
+                            >
                                 Login
                             </button>
                         </div>
