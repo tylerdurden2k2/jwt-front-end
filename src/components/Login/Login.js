@@ -1,7 +1,7 @@
 import "./Login.scss";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { userLogin } from "../../services/userService";
 
@@ -9,6 +9,13 @@ const Login = (props) => {
     const history = useHistory();
     const [keyLogin, setKeyLogin] = useState("");
     const [password, setPassword] = useState("");
+
+    useEffect(() => {
+        let session = sessionStorage.getItem("account");
+        if (session) {
+            history.push("/");
+        }
+    }, [history]);
 
     const defaultObj = {
         keyLogin: true,
@@ -39,14 +46,23 @@ const Login = (props) => {
             };
             sessionStorage.setItem("account", JSON.stringify(sessionValue));
             history.push("/users");
+            window.location.reload();
         } else {
             toast.error(response.data.EM);
+        }
+    };
+
+    const enterToLogin = (e) => {
+        console.log("checck event: ", e);
+        if (e.key === "Enter") {
+            handleLogin();
         }
     };
 
     const handleToRegisterPage = () => {
         history.push("/register");
     };
+
     return (
         <div className="login-container container-fluid pt-md-5 px-md-5">
             <div className="row px-md-5">
@@ -88,6 +104,7 @@ const Login = (props) => {
                                 placeholder="Enter your password..."
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                onKeyPress={(e) => enterToLogin(e)}
                             />
                         </div>
                         <div className="col-12 my-2">
