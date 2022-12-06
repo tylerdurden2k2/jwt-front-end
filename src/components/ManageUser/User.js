@@ -3,6 +3,7 @@ import { fetchAllUser, deleteUserById } from "../../services/userService";
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import ModalDelete from "./ModalDelete";
+import ModalUser from "./ModalUser";
 
 const User = (props) => {
     const [listUser, setListUser] = useState([]);
@@ -149,7 +150,9 @@ const User = (props) => {
                 show={showModalDelete}
                 handleClose={handleCloseModal}
                 handleDeleteUser={handleDeleteUser}
+                user={currentUser}
             />
+            <ModalUser />
         </>
     );
 };
