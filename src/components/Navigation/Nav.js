@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 const Nav = (props) => {
     const [showNav, SetShowNav] = useState(true);
     let location = useLocation();
-    console.log("check location: ", location);
     useEffect(() => {
         if (
             location.pathname === "/login" ||

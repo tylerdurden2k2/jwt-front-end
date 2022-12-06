@@ -1,15 +1,26 @@
 import { useState, useEffect } from "react";
-import { fetchAllUser } from "../../services/userService";
+import { fetchAllUser, deleteUserById } from "../../services/userService";
 import ReactPaginate from "react-paginate";
+import { toast } from "react-toastify";
+import ModalDelete from "./ModalDelete";
+
 const User = (props) => {
     const [listUser, setListUser] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(2);
+    const [currentUser, setCurrentUser] = useState({});
 
+    const [showModalDelete, setShowModalDelete] = useState(false);
+    const handleCloseModal = () => {
+        setShowModalDelete(false);
+    };
+    const handleShowModal = (user) => {
+        setShowModalDelete(true);
+        setCurrentUser(user);
+    };
     const getAllUser = async () => {
         let response = await fetchAllUser(currentPage, limit);
-        console.log("check response: ", response);
         if (
             response &&
             response.data &&
@@ -24,10 +35,21 @@ const User = (props) => {
         getAllUser();
     }, [currentPage]);
 
-    console.log("check listUser: ", listUser);
     const handlePageClick = (e) => {
         setCurrentPage(e.selected + 1);
     };
+
+    const handleDeleteUser = async () => {
+        let response = await deleteUserById(currentUser.id);
+        if (response && response.data && response.data.EC === 0) {
+            toast.success(response.data.EM);
+            await getAllUser();
+        } else {
+            toast.error(response.data.EM);
+        }
+        setShowModalDelete(false);
+    };
+
     return (
         <>
             <div className="manage-user-container">
@@ -56,6 +78,7 @@ const User = (props) => {
                                     <th scope="col">Gender</th>
                                     <th scope="col">Address</th>
                                     <th scope="col">Position</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,6 +95,25 @@ const User = (props) => {
                                                 <td>
                                                     {item.Group &&
                                                         item.Group.description}
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        type="button"
+                                                        className=" mx-2 btn btn-warning"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-danger"
+                                                        onClick={() =>
+                                                            handleShowModal(
+                                                                item
+                                                            )
+                                                        }
+                                                    >
+                                                        Delete
+                                                    </button>
                                                 </td>
                                             </tr>
                                         );
@@ -103,6 +145,11 @@ const User = (props) => {
                     </div>
                 </div>
             </div>
+            <ModalDelete
+                show={showModalDelete}
+                handleClose={handleCloseModal}
+                handleDeleteUser={handleDeleteUser}
+            />
         </>
     );
 };

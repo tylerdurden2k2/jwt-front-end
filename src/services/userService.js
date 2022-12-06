@@ -13,3 +13,7 @@ export const fetchAllUser = (page, limit) => {
         `http://localhost:8080/api/v1/users/read?page=${page}&limit=${limit}`
     );
 };
+
+export const deleteUserById = (id) => {
+    return axios.delete(`http://localhost:8080/api/v1/users/delete/${id}`);
+};
