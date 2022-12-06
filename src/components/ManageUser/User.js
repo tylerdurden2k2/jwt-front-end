@@ -11,6 +11,11 @@ const User = (props) => {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(2);
     const [currentUser, setCurrentUser] = useState({});
+    const [showModalUser, setShowModalUser] = useState(false);
+
+    const handleCloseModalUser = () => {
+        setShowModalUser(false);
+    };
 
     const [showModalDelete, setShowModalDelete] = useState(false);
     const handleCloseModal = () => {
@@ -50,7 +55,9 @@ const User = (props) => {
         }
         setShowModalDelete(false);
     };
-
+    const refreshAfterHandleSuccess = () => {
+        getAllUser();
+    };
     return (
         <>
             <div className="manage-user-container">
@@ -63,11 +70,12 @@ const User = (props) => {
                             <button
                                 type="button"
                                 className="btn btn-primary mx-1"
+                                onClick={() => setShowModalUser(true)}
                             >
                                 Add User
                             </button>
                             <button type="button" className="btn btn-success">
-                                Update User
+                                Refresh
                             </button>
                         </div>
                         <table className="table table-hover table-bordered">
@@ -152,7 +160,11 @@ const User = (props) => {
                 handleDeleteUser={handleDeleteUser}
                 user={currentUser}
             />
-            <ModalUser />
+            <ModalUser
+                handleClose={handleCloseModalUser}
+                show={showModalUser}
+                refreshPage={refreshAfterHandleSuccess}
+            />
         </>
     );
 };

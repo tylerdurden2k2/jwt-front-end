@@ -21,3 +21,10 @@ export const deleteUserById = (id) => {
 export const fetchAllPosition = () => {
     return axios.get(`http://localhost:8080/api/v1/group/read`);
 };
+
+export const createNewUser = (data) => {
+    return axios.post(
+        "http://localhost:8080/api/v1/users/create-new-user",
+        data
+    );
+};
