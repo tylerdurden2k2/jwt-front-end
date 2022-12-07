@@ -3,18 +3,33 @@ import { fetchAllUser, deleteUserById } from "../../services/userService";
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import ModalDelete from "./ModalDelete";
-import ModalUser from "./ModalUser";
+import ModalCreate from "./ModalCreate";
+import ModalUpdate from "./ModalUpdate";
 
 const User = (props) => {
     const [listUser, setListUser] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(2);
+    //data User to delete
     const [currentUser, setCurrentUser] = useState({});
-    const [showModalUser, setShowModalUser] = useState(false);
+    const [showModalCreate, setShowModalCreate] = useState(false);
+    const [showModalUpdate, setShowModalUpdate] = useState(false);
+    //data User to update
+    const [dataUser, setDataUser] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleCloseModalUser = () => {
-        setShowModalUser(false);
+    const handleCloseModalCreate = () => {
+        setShowModalCreate(false);
+    };
+    const handleCloseModalUpdate = () => {
+        setShowModalUpdate(false);
+    };
+    const handleShowModalUpdate = (user) => {
+        setShowModalUpdate(true);
+        let groupId = user.Group.id;
+        const { ["Group"]: group, ...handleUser } = user;
+        setDataUser({ ...handleUser, groupId });
     };
 
     const [showModalDelete, setShowModalDelete] = useState(false);
@@ -58,6 +73,13 @@ const User = (props) => {
     const refreshAfterHandleSuccess = () => {
         getAllUser();
     };
+    const handleClickRefreshPage = async () => {
+        setIsLoading(true);
+        setTimeout(() => {
+            refreshAfterHandleSuccess();
+            setIsLoading(false);
+        }, 1000);
+    };
     return (
         <>
             <div className="manage-user-container">
@@ -70,17 +92,22 @@ const User = (props) => {
                             <button
                                 type="button"
                                 className="btn btn-primary mx-1"
-                                onClick={() => setShowModalUser(true)}
+                                onClick={() => setShowModalCreate(true)}
                             >
                                 Add User
                             </button>
-                            <button type="button" className="btn btn-success">
+                            <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={() => handleClickRefreshPage()}
+                            >
                                 Refresh
                             </button>
                         </div>
                         <table className="table table-hover table-bordered">
                             <thead className="table-danger">
                                 <tr>
+                                    <th scope="col">#No</th>
                                     <th scope="col">ID</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">User name</th>
@@ -90,44 +117,62 @@ const User = (props) => {
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {listUser &&
-                                    listUser.length > 0 &&
-                                    listUser.map((item) => {
-                                        return (
-                                            <tr key={item.id}>
-                                                <th scope="row">{item.id}</th>
-                                                <td>{item.email}</td>
-                                                <td>{item.username}</td>
-                                                <td>{item.sex}</td>
-                                                <td>{item.address}</td>
-                                                <td>
-                                                    {item.Group &&
-                                                        item.Group.description}
-                                                </td>
-                                                <td>
-                                                    <button
-                                                        type="button"
-                                                        className=" mx-2 btn btn-warning"
-                                                    >
-                                                        Edit
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-danger"
-                                                        onClick={() =>
-                                                            handleShowModal(
-                                                                item
-                                                            )
-                                                        }
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                            </tbody>
+                            {isLoading ? (
+                                <div>Loading ...</div>
+                            ) : (
+                                <tbody>
+                                    {listUser &&
+                                        listUser.length > 0 &&
+                                        listUser.map((item, index) => {
+                                            return (
+                                                <tr key={item.id}>
+                                                    <th scope="row">
+                                                        {(currentPage - 1) *
+                                                            limit +
+                                                            index +
+                                                            1}
+                                                    </th>
+                                                    <th scope="row">
+                                                        {item.id}
+                                                    </th>
+                                                    <td>{item.email}</td>
+                                                    <td>{item.username}</td>
+                                                    <td>{item.sex}</td>
+                                                    <td>{item.address}</td>
+                                                    <td>
+                                                        {item.Group &&
+                                                            item.Group
+                                                                .description}
+                                                    </td>
+                                                    <td>
+                                                        <button
+                                                            type="button"
+                                                            className=" mx-2 btn btn-warning"
+                                                            onClick={() =>
+                                                                handleShowModalUpdate(
+                                                                    item
+                                                                )
+                                                            }
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-danger"
+                                                            onClick={() =>
+                                                                handleShowModal(
+                                                                    item
+                                                                )
+                                                            }
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                </tbody>
+                            )}
                         </table>
                         <div className="manage-user-footer">
                             <ReactPaginate
@@ -160,10 +205,16 @@ const User = (props) => {
                 handleDeleteUser={handleDeleteUser}
                 user={currentUser}
             />
-            <ModalUser
-                handleClose={handleCloseModalUser}
-                show={showModalUser}
+            <ModalCreate
+                handleClose={handleCloseModalCreate}
+                show={showModalCreate}
                 refreshPage={refreshAfterHandleSuccess}
+            />
+            <ModalUpdate
+                handleClose={handleCloseModalUpdate}
+                show={showModalUpdate}
+                refreshPage={refreshAfterHandleSuccess}
+                dataUser={dataUser}
             />
         </>
     );

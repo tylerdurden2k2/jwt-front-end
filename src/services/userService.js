@@ -28,3 +28,7 @@ export const createNewUser = (data) => {
         data
     );
 };
+
+export const updateUser = (data) => {
+    return axios.put("http://localhost:8080/api/v1/users/update-user", data);
+};

@@ -4,7 +4,7 @@ import { fetchAllPosition, createNewUser } from "../../services/userService";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-const ModalUser = (props) => {
+const ModalCreate = (props) => {
     const [listPosition, setListPosition] = useState([]);
 
     const defaultInput = {
@@ -96,7 +96,7 @@ const ModalUser = (props) => {
                 onHide={props.handleClose}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal User</Modal.Title>
+                    <Modal.Title>Create User</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="modal-user-form row">
@@ -158,6 +158,7 @@ const ModalUser = (props) => {
                                 <span className="text-danger">*</span> )
                             </label>
                             <input
+                                type="password"
                                 className={
                                     isValid.password
                                         ? "form-control"
@@ -241,4 +242,4 @@ const ModalUser = (props) => {
         </>
     );
 };
-export default ModalUser;
+export default ModalCreate;
