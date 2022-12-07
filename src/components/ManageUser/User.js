@@ -42,14 +42,10 @@ const User = (props) => {
     };
     const getAllUser = async () => {
         let response = await fetchAllUser(currentPage, limit);
-        if (
-            response &&
-            response.data &&
-            response.data.DT &&
-            response.data.DT.listUser
-        ) {
-            setListUser([...response.data.DT.listUser]);
-            setTotalPages(response.data.DT.totalPages);
+        console.log("check response: ", response);
+        if (response && response.DT && response.DT.listUser) {
+            setListUser([...response.DT.listUser]);
+            setTotalPages(response.DT.totalPages);
         }
     };
     useEffect(() => {
@@ -62,11 +58,11 @@ const User = (props) => {
 
     const handleDeleteUser = async () => {
         let response = await deleteUserById(currentUser.id);
-        if (response && response.data && response.data.EC === 0) {
-            toast.success(response.data.EM);
+        if (response && response.EC === 0) {
+            toast.success(response.EM);
             await getAllUser();
         } else {
-            toast.error(response.data.EM);
+            toast.error(response.EM);
         }
         setShowModalDelete(false);
     };
@@ -94,6 +90,7 @@ const User = (props) => {
                                 className="btn btn-primary mx-1"
                                 onClick={() => setShowModalCreate(true)}
                             >
+                                <i className="fa fa-plus-circle mx-1" />
                                 Add User
                             </button>
                             <button
@@ -101,6 +98,7 @@ const User = (props) => {
                                 className="btn btn-success"
                                 onClick={() => handleClickRefreshPage()}
                             >
+                                <i className="fa fa-refresh mx-1" />
                                 Refresh
                             </button>
                         </div>
@@ -145,28 +143,34 @@ const User = (props) => {
                                                                 .description}
                                                     </td>
                                                     <td>
-                                                        <button
-                                                            type="button"
-                                                            className=" mx-2 btn btn-warning"
+                                                        <span
+                                                            style={{
+                                                                cursor: "pointer",
+                                                            }}
+                                                            title="Edit"
+                                                            className="fs-5 px-2 mx-1"
                                                             onClick={() =>
                                                                 handleShowModalUpdate(
                                                                     item
                                                                 )
                                                             }
                                                         >
-                                                            Edit
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-danger"
+                                                            <i className="fa fa-pencil text-warning" />
+                                                        </span>
+                                                        <span
+                                                            style={{
+                                                                cursor: "pointer",
+                                                            }}
+                                                            title="Delete"
+                                                            className="fs-5 px-2 mx-1"
                                                             onClick={() =>
                                                                 handleShowModal(
                                                                     item
                                                                 )
                                                             }
                                                         >
-                                                            Delete
-                                                        </button>
+                                                            <i className="fa fa-trash text-danger" />
+                                                        </span>
                                                     </td>
                                                 </tr>
                                             );

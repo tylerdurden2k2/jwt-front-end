@@ -45,13 +45,13 @@ const ModalCreate = (props) => {
         if (check) {
             let response = await createNewUser(inputFields);
             console.log("check response: ", response);
-            if (response && response.data && response.data.EC === 0) {
-                toast.success(response.data.EM);
+            if (response && response.EC === 0) {
+                toast.success(response.EM);
                 props.handleClose();
                 props.refreshPage();
                 setInputFields({});
             } else {
-                toast.error(response.data.EM);
+                toast.error(response.EM);
             }
         } else {
             toast.error("You need to enter all required information");
@@ -60,16 +60,11 @@ const ModalCreate = (props) => {
     };
     const getAllPosition = async () => {
         let response = await fetchAllPosition();
-        if (
-            response &&
-            response.data &&
-            response.data.DT.length > 0 &&
-            response.data.EC === 0
-        ) {
-            setListPosition([...response.data.DT]);
+        if (response && response.DT.length > 0 && response.EC === 0) {
+            setListPosition([...response.DT]);
             setInputFields({
                 ...inputFields,
-                groupId: response.data.DT[0].id,
+                groupId: response.DT[0].id,
                 sex: "Male",
             });
         }
