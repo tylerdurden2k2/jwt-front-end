@@ -5,17 +5,36 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
 import Nav from "./components/Navigation/Nav";
 import AppRoutes from "./Routes/AppRoutes";
+import RiseLoader from "react-spinners/RiseLoader";
+import { useContext } from "react";
+import { UserContext } from "./context";
 
 function App() {
+    let { user } = useContext(UserContext);
     return (
         <>
             <Router>
-                <div className="app-header">
-                    <Nav />
-                </div>
-                <div className="app-container">
-                    <AppRoutes />
-                </div>
+                {user && user.isLoading ? (
+                    <div className="loading">
+                        <RiseLoader
+                            color={"#365ed6"}
+                            loading={true}
+                            cssOverride={{}}
+                            size={20}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                        />
+                    </div>
+                ) : (
+                    <>
+                        <div className="app-header">
+                            <Nav />
+                        </div>
+                        <div className="app-container">
+                            <AppRoutes />
+                        </div>
+                    </>
+                )}
             </Router>
             <ToastContainer
                 position="top-right"

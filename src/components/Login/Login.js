@@ -1,21 +1,16 @@
 import "./Login.scss";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
 import { toast } from "react-toastify";
 import { userLogin } from "../../services/userService";
+import { UserContext } from "../../context";
 
 const Login = (props) => {
     const history = useHistory();
     const [keyLogin, setKeyLogin] = useState("");
     const [password, setPassword] = useState("");
-
-    useEffect(() => {
-        let session = sessionStorage.getItem("account");
-        if (session) {
-            history.push("/");
-        }
-    }, [history]);
+    let { login } = useContext(UserContext);
 
     const defaultObj = {
         keyLogin: true,
@@ -42,18 +37,21 @@ const Login = (props) => {
             toast.success(response.EM);
             let sessionValue = {
                 isAuthenticate: true,
-                token: "fake token",
+                token: response.DT.access_token,
+                account: {
+                    email: response.DT.email,
+                    username: response.DT.username,
+                    roles: response.DT.roles,
+                },
             };
-            sessionStorage.setItem("account", JSON.stringify(sessionValue));
+            login(sessionValue);
             history.push("/users");
-            window.location.reload();
         } else {
             toast.error(response.EM);
         }
     };
 
     const enterToLogin = (e) => {
-        console.log("checck event: ", e);
         if (e.key === "Enter") {
             handleLogin();
         }

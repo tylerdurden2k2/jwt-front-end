@@ -31,9 +31,7 @@ const ModalUpdate = (props) => {
     }, []);
 
     const handleConfirmUpdate = async () => {
-        console.log("check data: ", dataUser);
         let response = await updateUser(dataUser);
-        console.log("check response: ", response);
         if (response && response.EC === 0) {
             toast.success(response.EM);
             props.handleClose();

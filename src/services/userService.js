@@ -28,3 +28,7 @@ export const createNewUser = (data) => {
 export const updateUser = (data) => {
     return axios.put("/api/v1/users/update-user", data);
 };
+
+export const getUserAccount = () => {
+    return axios.get("/api/v1/account");
+};

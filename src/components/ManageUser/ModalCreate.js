@@ -40,11 +40,8 @@ const ModalCreate = (props) => {
     };
     const handleSubmitForm = async () => {
         let check = handleValidateForm();
-        console.log("check: ", check);
-        console.log("check fields: ", inputFields);
         if (check) {
             let response = await createNewUser(inputFields);
-            console.log("check response: ", response);
             if (response && response.EC === 0) {
                 toast.success(response.EM);
                 props.handleClose();
@@ -74,7 +71,6 @@ const ModalCreate = (props) => {
             ...inputFields,
         };
         copyObj[name] = value;
-        console.log("check obj: ", copyObj);
         setInputFields({ ...copyObj });
     };
 
