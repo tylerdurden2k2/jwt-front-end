@@ -5,6 +5,9 @@ const instance = axios.create({
 });
 // Add a request interceptor
 instance.defaults.withCredentials = true;
+instance.defaults.headers.common[
+    "Authorization"
+] = `Bearer ${localStorage.getItem("jwt")}`;
 instance.interceptors.request.use(
     function (config) {
         // Do something before request is sent

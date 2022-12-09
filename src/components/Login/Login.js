@@ -44,6 +44,7 @@ const Login = (props) => {
                     roles: response.DT.roles,
                 },
             };
+            localStorage.setItem("jwt", response.DT.access_token);
             login(sessionValue);
             history.push("/users");
         } else {
