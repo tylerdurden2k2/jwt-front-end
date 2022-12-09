@@ -32,3 +32,7 @@ export const updateUser = (data) => {
 export const getUserAccount = () => {
     return axios.get("/api/v1/account");
 };
+
+export const logoutUser = () => {
+    return axios.post("/api/v1/logout-user");
+};

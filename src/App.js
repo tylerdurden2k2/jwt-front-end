@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
-import Nav from "./components/Navigation/Nav";
+import NavHeader from "./components/Navigation/NavHeader";
 import AppRoutes from "./Routes/AppRoutes";
 import RiseLoader from "react-spinners/RiseLoader";
 import { useContext } from "react";
@@ -28,7 +28,7 @@ function App() {
                 ) : (
                     <>
                         <div className="app-header">
-                            <Nav />
+                            <NavHeader />
                         </div>
                         <div className="app-container">
                             <AppRoutes />

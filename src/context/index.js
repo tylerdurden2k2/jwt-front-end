@@ -16,10 +16,12 @@ const UserProvider = ({ children }) => {
     };
 
     const logout = () => {
-        setUser((user) => ({
-            name: "",
-            auth: false,
-        }));
+        setUser({
+            isAuthenticate: false,
+            token: "",
+            account: {},
+            isLoading: false,
+        });
     };
 
     const fetchUser = async () => {
@@ -50,7 +52,13 @@ const UserProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        fetchUser();
+        if (
+            window.location.pathname !== "/login" &&
+            window.location.pathname !== "/"
+        ) {
+            fetchUser();
+        }
+        setUser({ ...user, isLoading: false });
     }, []);
     return (
         <UserContext.Provider value={{ user, login, logout }}>

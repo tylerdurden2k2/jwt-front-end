@@ -1,0 +1,26 @@
+a {
+    color: rgb(199, 190, 190) !important;
+    margin: 0 5px;
+    text-decoration: none;
+    font-size: 18px !important;
+    &:hover {
+        color: rgb(241, 233, 233) !important;
+    }
+    &.active {
+        color: white !important;
+        font-weight: bold;
+    }
+}
+.dropdown-menu {
+    min-width: 8rem !important;
+    a {
+        color: rgb(59, 58, 58) !important;
+
+        &:hover {
+            color: rgb(33, 32, 32) !important;
+        }
+    }
+}
+.navbar-collapse.login {
+    justify-content: flex-end;
+}

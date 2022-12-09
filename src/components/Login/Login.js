@@ -115,7 +115,11 @@ const Login = (props) => {
                             </button>
                         </div>
                         <div className="col-12 text-center my-3">
-                            <Link className="forgot-password" exact to="/">
+                            <Link
+                                className="forgot-password"
+                                exact="true"
+                                to="/"
+                            >
                                 Forgot you password
                             </Link>
                         </div>
