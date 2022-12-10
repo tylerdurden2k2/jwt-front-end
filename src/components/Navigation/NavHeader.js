@@ -27,6 +27,7 @@ const NavHeader = (props) => {
         localStorage.removeItem("jwt");
         logout();
     };
+    console.log("check users: ", user);
     return (
         <>
             {(user && user.isAuthenticate) || location.pathname === "/" ? (
@@ -41,18 +42,23 @@ const NavHeader = (props) => {
                                 <Nav className="me-auto">
                                     <NavLink to="/users">User</NavLink>
                                     <NavLink to="/projects">Project</NavLink>
+                                    <NavLink to="/roles">Role</NavLink>
+                                    <NavLink to="/about">About</NavLink>
                                 </Nav>
                                 <Nav>
-                                    <Nav.Link>{user.account.email}</Nav.Link>
+                                    <Nav.Link>
+                                        <span className="welcome">Welcome</span>
+                                        {user.account.email}
+                                    </Nav.Link>
                                     <NavDropdown
                                         title="Options"
                                         id="collasible-nav-dropdown"
                                     >
-                                        <NavDropdown.Item href="#action/3.3">
+                                        <NavDropdown.Item>
                                             Settings
                                         </NavDropdown.Item>
                                         <NavDropdown.Divider />
-                                        <NavDropdown.Item href="#action/3.4">
+                                        <NavDropdown.Item>
                                             <span
                                                 onClick={() => handleLogout()}
                                             >

@@ -38,9 +38,7 @@ const UserProvider = ({ children }) => {
                 },
                 isLoading: false,
             };
-            setTimeout(() => {
-                setUser(data);
-            }, 3000);
+            setUser(data);
         } else {
             setUser({
                 isAuthenticate: false,
@@ -57,8 +55,9 @@ const UserProvider = ({ children }) => {
             window.location.pathname !== "/"
         ) {
             fetchUser();
+        } else {
+            setUser({ ...user, isLoading: false });
         }
-        setUser({ ...user, isLoading: false });
     }, []);
     return (
         <UserContext.Provider value={{ user, login, logout }}>
