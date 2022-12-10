@@ -1,20 +1,26 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
+import { createRole } from "../../services/roleService";
+import { toast } from "react-toastify";
+import TableRole from "./TableRole";
 
 const Role = (props) => {
     const [listChild, setListChild] = useState({
-        child1: { url: "", description: "" },
+        child1: { url: "", description: "", isValid: true },
     });
     const handleOnChangeInput = (key, value, name) => {
         let copyObj = _.cloneDeep(listChild);
         copyObj[key][name] = value;
+        if (copyObj[key]["url"]) {
+            copyObj[key]["isValid"] = true;
+        }
         setListChild({ ...copyObj });
     };
     const handleAddNewField = () => {
         let copyObj = _.cloneDeep(listChild);
         let randomKey = uuidv4();
-        copyObj[randomKey] = { url: "", description: "" };
+        copyObj[randomKey] = { url: "", description: "", isValid: true };
         setListChild({ ...copyObj });
     };
     const handleDeleteField = (key) => {
@@ -22,7 +28,39 @@ const Role = (props) => {
         delete copyObj[key];
         setListChild({ ...copyObj });
     };
-    console.log("check statet: ", listChild);
+    const buildDataToPersist = () => {
+        let copyObj = { ...listChild };
+        let result = [];
+        Object.entries(copyObj).map(([key, value]) => {
+            result.push({
+                url: value.url,
+                description: value.description,
+            });
+        });
+        return result;
+    };
+    const handleOnSave = async () => {
+        let emptyChild = Object.entries(listChild).find(([key, value]) => {
+            return !value["url"];
+        });
+        if (!emptyChild) {
+            //call api
+            let data = buildDataToPersist();
+            let response = await createRole(data);
+            console.log("check response: ", response);
+            if (response && response.EC === 0) {
+                toast.success(response.EM);
+            } else {
+                toast.error(response.EM);
+            }
+        } else {
+            console.log("empty: ", emptyChild);
+            let key = emptyChild[0];
+            let copyObj = { ...listChild };
+            copyObj[key]["isValid"] = false;
+            setListChild({ ...copyObj });
+        }
+    };
     return (
         <div className="role-container">
             <div className="container">
@@ -39,7 +77,11 @@ const Role = (props) => {
                                 <div className="col-5 form-group">
                                     <label>URL: </label>
                                     <input
-                                        className="form-control"
+                                        className={
+                                            value["isValid"]
+                                                ? "form-control"
+                                                : "form-control is-invalid"
+                                        }
                                         value={value["url"]}
                                         onChange={(e) =>
                                             handleOnChangeInput(
@@ -89,9 +131,15 @@ const Role = (props) => {
                     })}
                 </div>
                 <div className="mt-3">
-                    <button className="btn btn-warning">Save</button>
+                    <button
+                        className="btn btn-warning"
+                        onClick={() => handleOnSave()}
+                    >
+                        Save
+                    </button>
                 </div>
             </div>
+            <TableRole />
         </div>
     );
 };
