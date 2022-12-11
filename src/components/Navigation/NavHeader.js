@@ -18,7 +18,6 @@ const NavHeader = (props) => {
     };
     const handleLogout = async () => {
         let response = await logoutUser();
-        console.log("check response: ", response);
         if (response && response.EC === 0) {
             toast.success(response.EM);
         } else {

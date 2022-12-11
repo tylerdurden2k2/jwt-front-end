@@ -58,7 +58,6 @@ const Role = (props) => {
                 toast.error(response.EM);
             }
         } else {
-            console.log("empty: ", emptyChild);
             let key = emptyChild[0];
             let copyObj = { ...listChild };
             copyObj[key]["isValid"] = false;
