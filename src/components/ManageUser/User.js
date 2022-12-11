@@ -49,7 +49,7 @@ const User = (props) => {
     };
     useEffect(() => {
         getAllUser();
-    }, [currentPage]);
+    }, [currentPage, totalPages]);
 
     const handlePageClick = (e) => {
         setCurrentPage(e.selected + 1);

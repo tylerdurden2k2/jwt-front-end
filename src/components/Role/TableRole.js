@@ -1,13 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
-import { getAllRole } from "../../services/roleService";
+import { getAllRole, deleteRole } from "../../services/roleService";
 
-const TableRole = (props) => {
+const TableRole = forwardRef((props, ref) => {
     const [limit, setLimit] = useState(3);
     const [currentPage, setCurrentPage] = useState(1);
     const [listRole, setListRole] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
+
+    useImperativeHandle(ref, () => ({
+        fetchAllRoleFromChild() {
+            fetchAllRole();
+        },
+    }));
+
     const handlePageClick = (e) => {
         setCurrentPage(e.selected + 1);
     };
@@ -20,9 +27,18 @@ const TableRole = (props) => {
             toast.error(response.EM);
         }
     };
+    const handleDeleteRole = async (role) => {
+        let response = await deleteRole(role);
+        if (response && response.EC === 0) {
+            toast.success(response.EM);
+            await fetchAllRole();
+        } else {
+            toast.error(response.EM);
+        }
+    };
     useEffect(() => {
         fetchAllRole();
-    }, [currentPage]);
+    }, [currentPage, totalPages]);
     return (
         <div className="container mt-3">
             <table className="table table-bordered table-hover">
@@ -47,10 +63,12 @@ const TableRole = (props) => {
                                     <td>{item.url}</td>
                                     <td>{item.description}</td>
                                     <td>
-                                        <button className="btn btn-primary mx-2">
-                                            Edit
-                                        </button>
-                                        <button className="btn btn-danger">
+                                        <button
+                                            className="btn btn-danger"
+                                            onClick={() =>
+                                                handleDeleteRole(item)
+                                            }
+                                        >
                                             Delete
                                         </button>
                                     </td>
@@ -81,6 +99,6 @@ const TableRole = (props) => {
             />
         </div>
     );
-};
+});
 
 export default TableRole;

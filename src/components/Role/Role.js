@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { createRole } from "../../services/roleService";
@@ -9,6 +9,7 @@ const Role = (props) => {
     const [listChild, setListChild] = useState({
         child1: { url: "", description: "", isValid: true },
     });
+    const childRef = useRef();
     const handleOnChangeInput = (key, value, name) => {
         let copyObj = _.cloneDeep(listChild);
         copyObj[key][name] = value;
@@ -47,9 +48,12 @@ const Role = (props) => {
             //call api
             let data = buildDataToPersist();
             let response = await createRole(data);
-            console.log("check response: ", response);
             if (response && response.EC === 0) {
                 toast.success(response.EM);
+                childRef.current.fetchAllRoleFromChild();
+                setListChild({
+                    child1: { url: "", description: "", isValid: true },
+                });
             } else {
                 toast.error(response.EM);
             }
@@ -139,7 +143,7 @@ const Role = (props) => {
                     </button>
                 </div>
             </div>
-            <TableRole />
+            <TableRole ref={childRef} />
         </div>
     );
 };

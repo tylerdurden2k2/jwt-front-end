@@ -27,7 +27,6 @@ const NavHeader = (props) => {
         localStorage.removeItem("jwt");
         logout();
     };
-    console.log("check users: ", user);
     return (
         <>
             {(user && user.isAuthenticate) || location.pathname === "/" ? (
@@ -43,7 +42,9 @@ const NavHeader = (props) => {
                                     <NavLink to="/users">User</NavLink>
                                     <NavLink to="/projects">Project</NavLink>
                                     <NavLink to="/roles">Role</NavLink>
-                                    <NavLink to="/about">About</NavLink>
+                                    <NavLink to="/group-role">
+                                        Group-Role
+                                    </NavLink>
                                 </Nav>
                                 <Nav>
                                     <Nav.Link>
