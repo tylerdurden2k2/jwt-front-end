@@ -1,7 +1,7 @@
 import "./Login.scss";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { userLogin } from "../../services/userService";
 import { UserContext } from "../../context";
@@ -10,7 +10,7 @@ const Login = (props) => {
     const history = useHistory();
     const [keyLogin, setKeyLogin] = useState("");
     const [password, setPassword] = useState("");
-    let { login } = useContext(UserContext);
+    let { login, user } = useContext(UserContext);
 
     const defaultObj = {
         keyLogin: true,
@@ -61,7 +61,11 @@ const Login = (props) => {
     const handleToRegisterPage = () => {
         history.push("/register");
     };
-
+    useEffect(() => {
+        if (user && user.isAuthenticate) {
+            history.push("/login");
+        }
+    }, [user]);
     return (
         <div className="login-container container-fluid pt-md-5 px-md-5">
             <div className="row px-md-5">

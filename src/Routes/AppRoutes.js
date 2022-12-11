@@ -6,6 +6,7 @@ import PrivateRoutes from "./PrivateRoutes";
 import Project from "../components/Project/Project";
 import Role from "../components/Role/Role";
 import GroupRole from "../components/GroupRole/GroupRole";
+import Home from "../components/Home/Home";
 
 const AppRoutes = (props) => {
     return (
@@ -22,7 +23,7 @@ const AppRoutes = (props) => {
                     <Register />
                 </Route>
                 <Route path="/" exact={true}>
-                    Home
+                    <Home />
                 </Route>
                 <Route path="*">404 Not Found</Route>
             </Switch>

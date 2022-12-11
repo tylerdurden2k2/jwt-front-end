@@ -42,9 +42,19 @@ const User = (props) => {
     };
     const getAllUser = async () => {
         let response = await fetchAllUser(currentPage, limit);
-        if (response && response.DT && response.DT.listUser) {
-            setListUser([...response.DT.listUser]);
+        console.log("check response: ", response);
+        if (response && response.EC === 0) {
             setTotalPages(response.DT.totalPages);
+            if (
+                response.DT.totalPages > 0 &&
+                response.DT.listUser.length === 0
+            ) {
+                setCurrentPage(response.DT.totalPages);
+                await fetchAllUser(response.DT.totalPages, limit);
+            }
+            if (response.DT.totalPages > 0 && response.DT.listUser.length > 0) {
+                setListUser(response.DT.listUser);
+            }
         }
     };
     useEffect(() => {
@@ -197,6 +207,7 @@ const User = (props) => {
                                 containerClassName="pagination"
                                 activeClassName="active"
                                 renderOnZeroPageCount={null}
+                                forcePage={+currentPage - 1}
                             />
                         </div>
                     </div>

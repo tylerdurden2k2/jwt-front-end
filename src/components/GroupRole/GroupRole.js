@@ -57,7 +57,6 @@ const GroupRole = (props) => {
         let assignRole = roleByPosition.filter((item) => item.isAssigned);
         let data = buildDataToSave(+selectedPosition, assignRole);
         let response = await assignRoleForGroup(data);
-        console.log("check response: ", response);
         if (response && response.EC === 0) {
             toast.success(response.EM);
         } else {
